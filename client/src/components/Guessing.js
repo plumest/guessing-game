@@ -15,20 +15,14 @@ class Guessing extends Component {
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        // axios.post("./api/guessing/new", {
-        //     guess: ['A', 'B', 'C'],
-        //     answer: [],
-        //     nWrong: 0
-        // })
-        //     .then(res => console.log(res))
-        //     .catch(e => console.log(e));
     }
 
     async componentDidMount() {
         let response = await axios.get("./api/guessing");
         let data = response.data[0];
-        console.log(data);
+        console.log(response);
         this.setState({
+            id: data._id,
             guess: data.guess,
             answer: data.answer,
             nWrong: data.nWrong,
@@ -54,6 +48,17 @@ class Guessing extends Component {
         } else {
             this.setState({guess: [...this.state.guess, char]})
         }
+        let myData = JSON.stringify({
+            "_id": this.state.id,
+            "guess": this.state.guess,
+            "answer": this.state.answer,
+            "nWrong": this.state.nWrong
+        });
+        console.log(myData);
+        axios.put(`./api/guessing/${this.state.id}`, myData,
+            {
+                headers: {"Accept": "application/json", "Content-Type": "application/json; charset=utf-8"}
+            }).then(res => console.log(res.data, res.config)).catch(e => console.log(e))
     }
 
     handleSubmit() {

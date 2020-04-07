@@ -6,7 +6,14 @@ const app = express();
 
 // app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.use(function(req, res, next) {
+//     res.headers("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+//     res.headers("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+
 
 // Connect to MongoDB
 mongoose
@@ -27,19 +34,26 @@ app.get('/api/guessing', (req, res) => {
 });
 
 app.post('/api/guessing/new', (req, res) => {
+    console.log(req);
     const newQuestion = new Guessing({
-        guess: req.body.name.split("")
+        // guess: req.body.name.split("")
+        guess: req.body.guess
     });
 
     newQuestion.save();
 });
 
 app.put('/api/guessing/:id', (req, res) => {
-    Guessing.update({_id: req.params.id}, {
-        guess: req.body.guess,
-        answer: req.body.answer,
-        nWrong: req.body.nWrong
-    });
+    // Guessing.update({_id: req.params.id}, {
+    //     guess: req.body.guess,
+    //     answer: req.body.answer,
+    //     nWrong: req.body.nWrong
+    // });
+    Guessing.findOneAndUpdate(
+        {_id: req.params.id},
+        {...req.body}
+    );
+    res.status(200).send();
 });
 
 const port = 5000;
