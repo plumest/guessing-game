@@ -1,34 +1,91 @@
 import React, { Component } from "react";
+import Button from "./Button";
+import Guessed from "./Guessed";
 
 class Guessing extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "",
-            char: [],
-            ans: [],
-            n: 0
+            guess: [],
+            answer: [],
+            nWrong: 0,
+            isPlaying: false,
+            isWinner: false
+        };
+        this.handleClick = this.handleClick.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    // async componentDidMount() {
+    //     const response = await fetch('./api/guessing');
+    //     const json = await response.json();
+    //     // this.setState({
+    //     //     name: json.name,
+    //     //     char: json.char,
+    //     //     ans: json.ans,
+    //     //     n: json.n
+    //     // })
+    //     console.log(json);
+    // }
+
+    handleClick(char) {
+        if (this.state.isPlaying) {
+            let index = this.state.answer.length;
+            if (this.state.guess[index] === char) {
+                if (this.state.guess.length === this.state.answer.length + 1) {
+                    this.setState({
+                        answer: [...this.state.answer, char],
+                        isWinner: !this.state.isWinner
+                    });
+                } else {
+                    this.setState({answer: [...this.state.answer, char]});
+                }
+            } else {
+                this.setState({nWrong: this.state.nWrong + 1})
+            }
+        } else {
+            this.setState({guess: [...this.state.guess, char]})
         }
     }
 
-    async componentDidMount() {
-        const response = await fetch('./api/guessing');
-        const json = await response.json();
-        // this.setState({
-        //     name: json.name,
-        //     char: json.char,
-        //     ans: json.ans,
-        //     n: json.n
-        // })
-        console.log(json);
+    handleSubmit() {
+        if (this.state.isPlaying) {
+            this.setState({
+                guess: [],
+                answer: [],
+                nWrong: 0,
+                isPlaying: !this.state.isPlaying,
+                isWinner: false
+            });
+        } else {
+            this.setState({isPlaying: !this.state.isPlaying})
+        }
     }
-
 
     render() {
         return (
-            <div>
-                {/*<p>name: {this.state.name}</p>*/}
-                {/*<p>n: {this.state.n}</p>*/}
+            <div className="guessing">
+                <h1 className="guessing-title">Guessing Game</h1>
+                <h2>{(this.state.isWinner) ? "You Win!!" : ""}</h2>
+                <div className="guessing-guessed">
+                    {this.state.guess.map((char, index) => (
+                        (index < this.state.answer.length) ?
+                            <Guessed key={index} value={char} isVisible={char === this.state.answer[index]} /> :
+                            <Guessed key={index} value={char} isVisible={false} />
+                        ))
+                    }
+                </div>
+
+                <p className="guessing-score">{this.state.nWrong}</p>
+
+                <div className="guessing-buttons">
+                    {"ABCD".split("").map(char => (
+                        <Button key={char} value={char} onClick={() => this.handleClick(char)} />
+                    ))}
+                </div>
+
+                <button onClick={this.handleSubmit}>{this.state.isPlaying ? "Reset" : "Done"}</button>
+
             </div>
         )
     }
