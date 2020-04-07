@@ -10,16 +10,19 @@
 
 <body>
 <h1>My Node App</h1>
-<form method="post" action="/item/add">
+<form method="post" action="/api/guessing/new">
     <label for="name">Name</label>
     <input type="text" name="name">
-        <input type="submit" value="Add">
+    <input type="submit" value="Add">
 </form>
 <h4>Items:</h4>
 <ul>
     <% guessing.forEach(function(item) { %>
     <li>
-        <%= item.name %>
+        <%= item.guess[0] %>
+    </li>
+    <li>
+        <%= item.guess[1] %>
     </li>
     <% }); %>
 </ul>

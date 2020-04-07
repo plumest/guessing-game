@@ -21,22 +21,22 @@ const Guessing = require('./models/Guessing');
 
 app.get('/api/guessing', (req, res) => {
     Guessing.find()
-        .then(guessing => res.render('guessing', { Guessing }))
+        // .then(guessing => res.render('index', { guessing }))
+        .then(guessing => res.send(guessing).json())
         .catch(err => res.status(404).json({ msg: 'No items found' }));
 });
 
 app.post('/api/guessing/new', (req, res) => {
     const newQuestion = new Guessing({
-        text: req.body.text,
-        stack: req.body.stack
+        guess: req.body.name.split("")
     });
 
-    newQuestion.save().then(item => res.redirect('/api/guessing'));
+    newQuestion.save();
 });
 
 app.put('/api/guessing/:id', (req, res) => {
     Guessing.update({_id: req.params.id}, {
-        stack: req.body.stack,
+        guess: req.body.guess,
         answer: req.body.answer,
         nWrong: req.body.nWrong
     });

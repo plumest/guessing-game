@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const GuessingSchema = new Schema({
-    text: {
-        type: String,
-        required: true
-    },
-    stack: {
+    guess: {
         type: [String]
     },
     answer: {
@@ -18,5 +14,9 @@ const GuessingSchema = new Schema({
         default: 0
     }
 });
+
+const Model = mongoose.model('Test', GuessingSchema);
+Model.create({ guess: ['A', 'B'] });
+
 
 module.exports = Item = mongoose.model('guessing', GuessingSchema);
