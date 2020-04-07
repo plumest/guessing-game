@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from 'axios';
 import Button from "./Button";
 import Guessed from "./Guessed";
 
@@ -14,19 +15,26 @@ class Guessing extends Component {
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        // axios.post("./api/guessing/new", {
+        //     guess: ['A', 'B', 'C'],
+        //     answer: [],
+        //     nWrong: 0
+        // })
+        //     .then(res => console.log(res))
+        //     .catch(e => console.log(e));
     }
 
-    // async componentDidMount() {
-    //     const response = await fetch('./api/guessing');
-    //     const json = await response.json();
-    //     // this.setState({
-    //     //     name: json.name,
-    //     //     char: json.char,
-    //     //     ans: json.ans,
-    //     //     n: json.n
-    //     // })
-    //     console.log(json);
-    // }
+    async componentDidMount() {
+        let response = await axios.get("./api/guessing");
+        let data = response.data[0];
+        console.log(data);
+        this.setState({
+            guess: data.guess,
+            answer: data.answer,
+            nWrong: data.nWrong,
+            isPlaying: true
+        })
+    }
 
     handleClick(char) {
         if (this.state.isPlaying) {
