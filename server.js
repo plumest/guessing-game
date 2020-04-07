@@ -25,12 +25,21 @@ app.get('/api/guessing', (req, res) => {
         .catch(err => res.status(404).json({ msg: 'No items found' }));
 });
 
-app.post('/api/guessing/add', (req, res) => {
-    const newAnswer = new Guessing({
-        name: req.body.name
+app.post('/api/guessing/new', (req, res) => {
+    const newQuestion = new Guessing({
+        text: req.body.text,
+        stack: req.body.stack
     });
 
-    newAnswer.save().then(item => res.redirect('/'));
+    newQuestion.save().then(item => res.redirect('/api/guessing'));
+});
+
+app.put('/api/guessing/:id', (req, res) => {
+    Guessing.update({_id: req.params.id}, {
+        stack: req.body.stack,
+        answer: req.body.answer,
+        nWrong: req.body.nWrong
+    });
 });
 
 const port = 5000;
