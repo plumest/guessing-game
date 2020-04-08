@@ -1,0 +1,95 @@
+.guessing {
+    display: flex;
+    width: 80%;
+    height: 80%;
+}
+
+.guessing-board {
+    text-align: center;
+    background-color: #FFD98F;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.1), inset 0 0 25px #FFD98F;
+}
+
+.guessing-title {
+    font-size: 4rem;
+}
+
+.guessing-wins {
+    font-size: 2rem;
+}
+
+.guessing-score {
+    font-size: 1.5rem;
+    margin: 3rem auto;
+}
+
+.guessing-score span {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #555555;
+}
+
+.guessing-game {
+    height: 90%;
+    width: 100%;
+    background: linear-gradient(
+            215deg,
+            rgba(161, 230, 227, 0.5) 0%,
+            rgba(236, 160, 182, 1) 100%
+    );
+    align-self: center;
+    text-align: center;
+    color: #555;
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.1);
+}
+
+.guessing-upper-half {
+    height: 50%;
+    font-size: 3rem;
+}
+
+.guessing-guesses {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.guessing-char {
+    margin: 2rem;
+    font-size: 3rem;
+}
+
+.guessing-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.guessing-done {
+    margin: 3rem;
+}
+
+.btn {
+    padding: 1rem;
+    margin: 1rem 0.5rem;
+    cursor: pointer;
+    color: #666;
+    font-size: 1rem;
+    transition: 0.3s ease;
+    background-color: #D2F7F6;
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.3), 0 5px 12px rgba(0, 0, 0, 0.1), inset 0 0 25px #A1E6E3;
+}
+
+.btn:active:focus {
+    background-color: #72CBC8;
+    box-shadow: none;
+}
+
+.btn:hover {
+    transform: translate(1px, -2px);
+    box-shadow: none;
+}

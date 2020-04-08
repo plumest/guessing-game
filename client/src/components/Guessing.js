@@ -3,6 +3,7 @@ import axios from 'axios';
 import Button from "./Button";
 import Guessed from "./Guessed";
 import qs from 'querystring';
+import './Guessing.css'
 
 class Guessing extends Component {
 
@@ -30,7 +31,7 @@ class Guessing extends Component {
             const request = await axios.post('./api/guessing/new');
             response = await axios.get("./api/guessing");
         }
-        
+
         data = response.data[0];
         this.setState({
             id: data._id,
@@ -93,27 +94,38 @@ class Guessing extends Component {
     render() {
         return (
             <div className="guessing">
-                <h1 className="guessing-title">Guessing Game</h1>
-                <h2>{(this.state.isWinner) ? "You Win!!" : ""}</h2>
-                <div className="guessing-guessed">
-                    {this.state.guess.map((char, index) => (
-                        (index < this.state.answer.length) ?
-                            <Guessed key={index} value={char} isVisible={char === this.state.answer[index]} /> :
-                            <Guessed key={index} value={char} isVisible={false} />
-                        ))
-                    }
+                <div className="guessing-board">
+                    <h1 className="guessing-title">Guessing Game</h1>
+                    <h2 className="guessing-wins">{(this.state.isWinner) ? "You Win!!" : ""}</h2>
+                    <p className="guessing-score">
+                        You wrong <span>{this.state.nWrong}</span> time{(this.state.nWrong) ? "s" : ""}
+                    </p>
                 </div>
 
-                <p className="guessing-score">{this.state.nWrong}</p>
+                <div className="guessing-game">
+                    <div className="guessing-upper-half">
+                        <div>
+                            <p>{(!this.state.isPlaying) ? "Hit some Characters" : ""}</p>
+                        </div>
+                        <div className="guessing-guesses">
+                            {this.state.guess.map((char, index) => (
+                                (index < this.state.answer.length) ?
+                                    <Guessed key={index} value={char} isVisible={char === this.state.answer[index]} /> :
+                                    <Guessed key={index} value={char} isVisible={false} />
+                            ))
+                            }
+                        </div>
+                    </div>
 
-                <div className="guessing-buttons">
-                    {"ABCD".split("").map(char => (
-                        <Button key={char} value={char} onClick={() => this.handleClick(char)} />
-                    ))}
+                    <div className="guessing-buttons">
+                        {"ABCD".split("").map(char => (
+                            <Button key={char} value={char} onClick={() => this.handleClick(char)} />
+                        ))}
+                    </div>
+
+                    <button className="guessing-done btn" onClick={this.handleSubmit}>{(!this.state.isPlaying && (!this.state.guess.length || this.state.isWinner)) ? "Reset" : "Done"}</button>
+
                 </div>
-
-                <button onClick={this.handleSubmit}>{this.state.isPlaying ? "Reset" : "Done"}</button>
-
             </div>
         )
     }
