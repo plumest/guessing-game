@@ -2,8 +2,12 @@ import React, { Component } from "react";
 import axios from 'axios';
 import Button from "./Button";
 import Guessed from "./Guessed";
+import qs from 'querystring';
 
 class Guessing extends Component {
+
+    CONFIG = {headers: {'Content-Type': 'application/x-www-form-urlencoded'}};
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,50 +19,56 @@ class Guessing extends Component {
         };
         this.handleClick = this.handleClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.updateData = this.updateData.bind(this);
     }
 
     async componentDidMount() {
-        let response = await axios.get("./api/guessing");
-        let data = response.data[0];
-        console.log(response);
-        this.setState({
-            id: data._id,
-            guess: data.guess,
-            answer: data.answer,
-            nWrong: data.nWrong,
-            isPlaying: true
-        })
+        try {
+            let response = await axios.get("./api/guessing");
+            let data = response.data[0];
+            this.setState({
+                id: data._id,
+                guess: data.guess,
+                answer: data.answer,
+                nWrong: data.nWrong,
+                isPlaying: (data.guess.length !== data.answer.length),
+                isWinner: (data.guess.length === data.answer.length && data.guess.length)
+            })
+        } catch (e) {
+            let request = await axios.post('./api/guessing/new');
+            let response = await axios.get("./api/guessing");
+            let data = response.data[0];
+            this.setState({
+                id: data._id,
+                guess: data.guess,
+                answer: data.answer,
+                nWrong: data.nWrong,
+                isPlaying: (data.guess.length !== data.answer.length),
+                isWinner: (data.guess.length === data.answer.length && data.guess.length)
+            })
+        }
     }
 
     handleClick(char) {
-        if (this.state.isPlaying) {
-            let index = this.state.answer.length;
-            if (this.state.guess[index] === char) {
-                if (this.state.guess.length === this.state.answer.length + 1) {
-                    this.setState({
-                        answer: [...this.state.answer, char],
-                        isWinner: !this.state.isWinner
-                    });
+        if (!this.state.isWinner) {
+            if (this.state.isPlaying) {
+                let index = this.state.answer.length;
+                if (this.state.guess[index] === char) {
+                    if (this.state.guess.length === this.state.answer.length + 1) {
+                        this.setState({
+                            answer: [...this.state.answer, char],
+                            isWinner: true
+                        }, () => this.updateData());
+                    } else {
+                        this.setState({answer: [...this.state.answer, char]}, () => this.updateData());
+                    }
                 } else {
-                    this.setState({answer: [...this.state.answer, char]});
+                    this.setState({nWrong: this.state.nWrong + 1}, () => this.updateData())
                 }
             } else {
-                this.setState({nWrong: this.state.nWrong + 1})
+                this.setState({guess: [...this.state.guess, char]}, () => this.updateData())
             }
-        } else {
-            this.setState({guess: [...this.state.guess, char]})
         }
-        let myData = JSON.stringify({
-            "_id": this.state.id,
-            "guess": this.state.guess,
-            "answer": this.state.answer,
-            "nWrong": this.state.nWrong
-        });
-        console.log(myData);
-        axios.put(`./api/guessing/${this.state.id}`, myData,
-            {
-                headers: {"Accept": "application/json", "Content-Type": "application/json; charset=utf-8"}
-            }).then(res => console.log(res.data, res.config)).catch(e => console.log(e))
     }
 
     handleSubmit() {
@@ -69,10 +79,22 @@ class Guessing extends Component {
                 nWrong: 0,
                 isPlaying: !this.state.isPlaying,
                 isWinner: false
-            });
+            }, () => this.updateData()
+            );
         } else {
             this.setState({isPlaying: !this.state.isPlaying})
         }
+    }
+
+    updateData() {
+        let myData = {
+            _id: this.state.id,
+            guess: this.state.guess,
+            answer: this.state.answer,
+            nWrong: this.state.nWrong
+        };
+        axios.put(`./api/guessing/${this.state.id}`, qs.stringify(myData), this.CONFIG)
+            .then(res => console.log(res.data)).catch(e => console.log(e))
     }
 
     render() {
