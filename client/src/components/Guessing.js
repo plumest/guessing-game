@@ -23,30 +23,23 @@ class Guessing extends Component {
     }
 
     async componentDidMount() {
-        try {
-            let response = await axios.get("./api/guessing");
-            let data = response.data[0];
-            this.setState({
-                id: data._id,
-                guess: data.guess,
-                answer: data.answer,
-                nWrong: data.nWrong,
-                isPlaying: (data.guess.length !== data.answer.length),
-                isWinner: (data.guess.length === data.answer.length && data.guess.length)
-            })
-        } catch (e) {
-            let request = await axios.post('./api/guessing/new');
-            let response = await axios.get("./api/guessing");
-            let data = response.data[0];
-            this.setState({
-                id: data._id,
-                guess: data.guess,
-                answer: data.answer,
-                nWrong: data.nWrong,
-                isPlaying: (data.guess.length !== data.answer.length),
-                isWinner: (data.guess.length === data.answer.length && data.guess.length)
-            })
+        let response = await axios.get("./api/guessing");
+        let data = response.data;
+
+        if (!data.length) {
+            const request = await axios.post('./api/guessing/new');
+            response = await axios.get("./api/guessing");
         }
+        
+        data = response.data[0];
+        this.setState({
+            id: data._id,
+            guess: data.guess,
+            answer: data.answer,
+            nWrong: data.nWrong,
+            isPlaying: (data.guess.length !== data.answer.length),
+            isWinner: (data.guess.length === data.answer.length && data.guess.length)
+        })
     }
 
     handleClick(char) {
