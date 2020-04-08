@@ -96,7 +96,7 @@ class Guessing extends Component {
             <div className="guessing">
                 <div className="guessing-board">
                     <h1 className="guessing-title">Guessing Game</h1>
-                    <h2 className="guessing-wins">{(this.state.isPlaying) ? "You Win!!" : ""}</h2>
+                    <h2 className="guessing-wins">{(this.state.isWinner) ? "You Win!!" : ""}</h2>
                     <p className="guessing-score">
                         You wrong <span>{this.state.nWrong}</span> time{(this.state.nWrong) ? "s" : ""}
                     </p>
