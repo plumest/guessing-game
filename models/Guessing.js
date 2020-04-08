@@ -16,7 +16,7 @@ const GuessingSchema = new Schema({
 });
 
 const Model = mongoose.model('Test', GuessingSchema);
-Model.create({ guess: ['A', 'B'] });
+Model.create({ guess: [] });
 
 
-module.exports = Item = mongoose.model('guessing', GuessingSchema);
+module.exports = Guess = mongoose.model('guessing', GuessingSchema);
